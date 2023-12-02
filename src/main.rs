@@ -1,6 +1,16 @@
 use clap::{Arg, Command};
 use std::io::Read;
 
+#[macro_export]
+macro_rules! log {
+    ($($arg:tt)*) => ($crate::log::info(format!($($arg)*)))
+}
+
+#[macro_export]
+macro_rules! error {
+    ($($arg:tt)*) => ($crate::log::error(format!($($arg)*)))
+}
+
 pub mod day1;
 
 fn cli() -> Command {
@@ -49,7 +59,7 @@ fn main() {
             let key = std::env::var("AOC_SESSION_KEY");
 
             if key.is_err() {
-                println!("AOC_SESSION_KEY environment variable not set");
+                log!("AOC_SESSION_KEY environment variable not set");
             }
 
             download(day.parse().unwrap(), key.unwrap());
@@ -61,20 +71,25 @@ fn main() {
 }
 
 fn solve(day: u8, part: u8) {
-    println!("Solving day {} part {}", day, part);
+    log!("Solving day {} part {}", day, part);
 
-    match day {
+    let answer: Result<String, String> = match day {
         1 => match part {
-            1 => crate::day1::part1::main(),
-            2 => crate::day1::part2::main(),
-            _ => println!("Part {} not found for day {}", part, day),
-        },
-        _ => println!("Day {} not found", day),
+            1 => Ok(crate::day1::part1::solve()),
+            2 => Ok(crate::day1::part2::solve()),
+            _ => Err(format!("Part {} not found for day {}", part, day)),
+        }
+        _ => Err(format!("Day {} not found", day)),
+    };
+
+    match answer {
+        Ok(answer) => log!("Answer: {}", answer),
+        Err(error) => error!("{}", error),
     }
 }
 
 fn download(day: u8, key: String) {
-    println!("Downloading input for day {}", day);
+    log!("Downloading input for day {}", day);
 
     let url = format!("https://adventofcode.com/2023/day/{}/input", day);
     let cookie = format!("session={}", key);
@@ -88,7 +103,7 @@ fn download(day: u8, key: String) {
     cmd.arg(output.clone());
     cmd.output().expect("Failed to execute curl");
 
-    println!("Downloaded input to {}", output);
+    log!("Downloaded input to {}", output);
 }
 
 fn read_input() -> String {
@@ -96,4 +111,16 @@ fn read_input() -> String {
     std::io::stdin().read_to_string(&mut input).unwrap();
 
     input
+}
+
+mod log {
+    use colored::*;
+
+    pub fn info(message: String) {
+        println!("[+] {}", message.cyan())
+    }
+
+    pub fn error(message: String) {
+        println!("[!] {}", message.red());
+    }
 }

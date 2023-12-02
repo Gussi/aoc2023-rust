@@ -1,98 +1,88 @@
 pub mod part1 {
 
-    pub fn main() {
+    pub fn solve() -> String {
         let input = crate::read_input();
-
-        let mut sum = 0;
+        let mut sum_of_calibration_values = 0;
 
         for line in input.lines() {
-            let mut two_chars = String::new();
+            let mut calibration_value = String::new();
 
             for c in line.chars() {
                 if c.is_digit(10) {
-                    two_chars.push(c);
+                    calibration_value.push(c);
                     break;
                 }
             }
 
             for c in line.chars().rev() {
                 if c.is_digit(10) {
-                    two_chars.push(c);
+                    calibration_value.push(c);
                     break;
                 }
             }
 
-            let num: i32 = two_chars.parse().unwrap();
+            let num: i32 = calibration_value.parse().unwrap();
 
-            sum += num;
+            sum_of_calibration_values += num;
         }
 
-        let answer = sum;
-
-        // print the sum (our answer)
-        println!("Answer: {}", answer);
+        return format!("Sum of all calibration values: {}", sum_of_calibration_values);
     }
 }
 
 pub mod part2 {
 
-    pub fn main() {
+    pub fn solve() -> String {
         let input = crate::read_input();
 
         let number_words = vec![
             "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
         ];
 
-        let mut sum = 0;
+        let mut sum_of_calibration_values = 0;
 
         for line in input.lines() {
-            let mut two_chars = String::new();
+            let mut calibration_value = String::new();
 
             'outer: for (i, c) in line.chars().enumerate() {
                 if c.is_digit(10) {
-                    two_chars.push(c);
+                    calibration_value.push(c);
                     break;
                 }
 
                 if c.is_alphabetic() {
-                    // Check if number word is found in line
                     for (j, number_word) in number_words.iter().enumerate() {
                         if line[i..].starts_with(number_word) {
-                            // Convert number word to digit
-                            two_chars.push_str(&j.to_string());
+                            calibration_value.push_str(&j.to_string());
                             break 'outer;
                         }
                     }
                 }
             }
 
-            // Loop backawards through line
             'outer: for (i, c) in line.chars().rev().enumerate() {
-                // Get index of character in line
                 let j = line.len() - i - 1;
 
                 if c.is_digit(10) {
-                    two_chars.push(c);
+                    calibration_value.push(c);
                     break;
                 }
 
                 if c.is_alphabetic() {
-                    // Check if number word is found in line
                     for (k, number_word) in number_words.iter().enumerate() {
                         if line[j..].starts_with(number_word) {
-                            // Convert number word to digit
-                            two_chars.push_str(&k.to_string());
+                            calibration_value.push_str(&k.to_string());
                             break 'outer;
                         }
                     }
                 }
             }
 
-            let num: i32 = two_chars.parse().unwrap();
+            let num: i32 = calibration_value.parse().unwrap();
 
-            sum += num;
+            sum_of_calibration_values += num;
         }
 
-        println!("Answer: {}", sum);
+        return format!("Sum of all calibration values: {}", sum_of_calibration_values);
     }
 }
