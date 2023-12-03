@@ -21,6 +21,10 @@ impl Cubes {
             && self.green <= limits.green
             && self.blue <= limits.blue
     }
+
+    fn get_power(&self) -> usize {
+        self.red * self.green * self.blue
+    }
 }
 
 impl Game {
@@ -81,6 +85,30 @@ impl Game {
             cubes,
         }
     }
+
+    fn get_max_for_each_color(&self) -> Cubes {
+        let mut max: Cubes = Cubes {
+            red: 0,
+            green: 0,
+            blue: 0,
+        };
+
+        self.cubes.iter().for_each(|cubes| {
+            if cubes.red > max.red {
+                max.red = cubes.red;
+            }
+
+            if cubes.green > max.green {
+                max.green = cubes.green;
+            }
+
+            if cubes.blue > max.blue {
+                max.blue = cubes.blue;
+            }
+        });
+
+        return max;
+    }
 }
 
 pub mod part1 {
@@ -119,7 +147,21 @@ pub mod part1 {
 
 pub mod part2 {
 
+    use super::*;
+
     pub fn solve() -> String {
-        return String::from("Note solved yet");
+        let input = crate::read_input();
+
+        let games: Vec<Game> = input
+            .lines()
+            .map(|line| {
+                Game::new_from_line(line)
+            }).collect();
+
+        let answer: usize = games.iter().map(|game| {
+            game.get_max_for_each_color().get_power()
+        }).sum();
+
+        return format!("Answer: {}", answer);
     }
 }
