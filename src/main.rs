@@ -12,6 +12,7 @@ macro_rules! error {
 }
 
 pub mod day1;
+pub mod day2;
 
 fn cli() -> Command {
     Command::new("aoc2023-rust")
@@ -77,6 +78,11 @@ fn solve(day: u8, part: u8) {
         1 => match part {
             1 => Ok(crate::day1::part1::solve()),
             2 => Ok(crate::day1::part2::solve()),
+            _ => Err(format!("Part {} not found for day {}", part, day)),
+        }
+        2 => match part {
+            1 => Ok(crate::day2::part1::solve()),
+            2 => Ok(crate::day2::part2::solve()),
             _ => Err(format!("Part {} not found for day {}", part, day)),
         }
         _ => Err(format!("Day {} not found", day)),

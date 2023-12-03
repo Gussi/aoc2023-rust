@@ -1,5 +1,4 @@
 pub mod part1 {
-
     pub fn solve() -> String {
         let input = crate::read_input();
         let mut sum_of_calibration_values = 0;
@@ -31,7 +30,6 @@ pub mod part1 {
 }
 
 pub mod part2 {
-
     pub fn solve() -> String {
         let input = crate::read_input();
 
